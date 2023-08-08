@@ -57,21 +57,18 @@ class CustomFeedGenerator(Rss201rev2Feed):
 
     def add_item_elements(self, handler, item):
         super(CustomFeedGenerator, self).add_item_elements(handler, item)
-        handler.startElement(u"content:encoded", {})
 
-        content = '<![CDATA['
+        content = '<content:encoded><![CDATA['
         if use_feed_image and item['image'] != "":
             content += '<img src="%s"><hr>' % (item['image'])
         content += item['content']
-        content += ']]>'
+        content += ']]></content:encoded>'
 
         # Adding content in this way do not escape content so make it suitable
         # for Feedburner and other services. If we use
         # handler.characters(content) then it will escape content and will not
         # work perfectly with Feedburner and other services.
         handler._write(content)
-
-        handler.endElement(u"content:encoded")
 
 
 class JSONFeed(SyndicationFeed):
